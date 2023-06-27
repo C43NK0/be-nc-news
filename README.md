@@ -7,3 +7,6 @@
 - Install node with the command 'npm install'
 - Create the databases with the command 'npm run setup-dbs'
 - Populate the databases with the comman 'npm run seed'
+
+- Install express as a dependency with the command 'npm install express --save'
+- Install supertest as a dev dependency with the command 'npm install supertest --save-dev'
