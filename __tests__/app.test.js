@@ -86,6 +86,7 @@ describe("Get /api/articles/:article_id", () => {
         })
     })
 })
+
 describe("Get /api/articles/:article_id", () => {
     test("400: should respond with an error when article_id is an invalid type", () => {
         return request(app)
