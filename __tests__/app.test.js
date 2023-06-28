@@ -3,6 +3,7 @@ const app = require("../app")
 const db = require("../db/connection")
 const seed = require("../db/seeds/seed")
 const data = require("../db/data/test-data/index")
+const endpointsData = require("../endpoints.json")
 
 beforeEach(() => {
     return seed(data)
@@ -18,7 +19,6 @@ describe("GET /api/topics", () => {
         .get("/api/topics")
         .expect(200)
         .then(({body}) => {
-            expect(body.message).toBe("all ok")
             expect(body.topics).toHaveLength(3)
             expect(body.topics).toBeInstanceOf(Array)
                 body.topics.forEach((item) => {
@@ -37,6 +37,19 @@ describe("Get /api/", () => {
         .then(({ body }) => {
             expect(body.message).toBe("Not found");
             })
+        })
+    })
+})
+
+describe("Get /api", () => {
+    test("200: Should return a JSON object with all available endpoints", () => {
+        return request(app)
+        .get("/api")
+        .expect(200)
+        .then(({ body }) => {
+            expect(body.endpoints).toEqual(endpointsData)
+                      
+        
         })
     })
 })

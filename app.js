@@ -1,9 +1,15 @@
 const express = require("express")
 const {handleServerErrors} = require("./errors/errors")
 const app = express()
-const {getTopics} = require("./controllers/api.controller")
+const {getTopics, getEndpoints} = require("./controllers/api.controller")
+
+
 
 app.get("/api/topics", getTopics)
+
+
+app.get("/api", getEndpoints)
+
 
 
 app.all("*", (req, res) => {
@@ -15,3 +21,4 @@ app.use(handleServerErrors)
 
 
 module.exports = app
+
