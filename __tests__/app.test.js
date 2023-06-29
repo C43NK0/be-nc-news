@@ -61,16 +61,16 @@ describe("Get /api/articles/:article_id", () => {
         .expect(200)
         .then(({ body }) => {
             expect(body.article).toBeInstanceOf(Object)
-            expect(body.article).toHaveProperty("author")
-            expect(body.article).toHaveProperty("title")
-            expect(body.article).toHaveProperty("topic")
-            expect(body.article).toHaveProperty("article_id")
             expect(body.article).toHaveProperty("created_at")
-            expect(body.article).toHaveProperty("votes")
-            expect(body.article).toHaveProperty("article_img_url")
+            expect(body.article.article_id).toBe(1)
             expect(body.article).toMatchObject
             ({
-                title: "Living in the shadow of a great man"
+                title: "Living in the shadow of a great man",
+                topic: "mitch",
+                author: "butter_bridge",
+                body: "I find this existence challenging",
+                votes: 100,
+                article_img_url: "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
             })
         })
     })
@@ -79,10 +79,7 @@ describe("Get /api/articles/:article_id", () => {
         .get("/api/articles/3")
         .expect(200)
         .then(({ body }) => {
-            expect(body.article).toMatchObject
-            ({
-                title: "Eight pug gifs that remind me of mitch"
-            })
+            expect(body.article.article_id).toBe(3)
         })
     })
 })
@@ -98,7 +95,7 @@ describe("Get /api/articles/:article_id", () => {
     })
     test("404: should respond with appropriate error when article_id is valid but does not exist", () => {
         return request(app)
-        .get("/api/articles/100")
+        .get("/api/articles/100000")
         .expect(404)
         .then(({ body }) => {
             expect(body.message).toBe("Not found");
