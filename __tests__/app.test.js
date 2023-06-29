@@ -5,6 +5,7 @@ const seed = require("../db/seeds/seed")
 const data = require("../db/data/test-data/index")
 const endpointsData = require("../endpoints.json")
 
+
 beforeEach(() => {
     return seed(data)
 })
@@ -112,7 +113,17 @@ describe("Get /api/articles", () => {
         .then(({ body }) => {
             expect(body.articles).toBeInstanceOf(Array)
             expect(body.articles).toHaveLength(13)
-            expect(body.articles[10]).toHaveProperty("comment_count")
+            
+            body.articles.forEach((item) => {
+                expect(item).toHaveProperty("comment_count")})
+
+                for (let i = 0; i < body.articles.length -1; i++){
+                    let latest = new Date(body.articles[i].created_at);
+                    let next = new Date(body.articles[i + 1].created_at);
+                    console.log(latest, next)
+                    expect(next.getTime()).toBeLessThanOrEqual(latest.getTime())
+                }
+            expect(body.articles).not.toHaveProperty("body")
             expect(body.articles[0].comment_count).toBe("2")
             expect(body.articles[12].comment_count).toBe("0")
             expect(body.articles[1]).toMatchObject

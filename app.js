@@ -5,6 +5,7 @@ const {getTopics, getEndpoints, getArticlesbyId, getArticles, } = require("./con
 
 
 
+
 app.get("/api/topics", getTopics)
 
 
