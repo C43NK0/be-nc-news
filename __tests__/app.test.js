@@ -103,3 +103,29 @@ describe("Get /api/articles/:article_id", () => {
     })
 
 })
+
+describe("Get /api/articles", () => {
+    test("200: responds with an articles array of article objects with the relevant properties, sorted by date in descending order and without a body property", () => {
+        return request(app)
+        .get("/api/articles")
+        .expect(200)
+        .then(({ body }) => {
+            expect(body.articles).toBeInstanceOf(Array)
+            expect(body.articles).toHaveLength(13)
+            expect(body.articles[10]).toHaveProperty("comment_count")
+            expect(body.articles[0].comment_count).toBe("2")
+            expect(body.articles[12].comment_count).toBe("0")
+            expect(body.articles[1]).toMatchObject
+            ({
+            author: 'icellusedkars',
+            title: 'A',
+            article_id: 6,
+            topic: 'mitch',
+            created_at: '2020-10-18T01:00:00.000Z',
+            votes: 0,
+            article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700',
+            comment_count: '1'
+            })
+        })
+    })
+})

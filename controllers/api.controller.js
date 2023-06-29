@@ -1,4 +1,4 @@
-const {fetchTopics, fetchArticlesById} = require("../models/api.model")
+const {fetchTopics, fetchArticlesById, fetchArticles} = require("../models/api.model")
 const endpoints = require("../endpoints.json")
 
 
@@ -15,7 +15,7 @@ exports.getEndpoints = (req, res, next) => {
     res.status(200).send({endpoints}).catch(next); 
 }
 
-exports.getArticles = (req, res, next) => {
+exports.getArticlesbyId = (req, res, next) => {
     
     const { article_id } = req.params    
     fetchArticlesById(article_id)
@@ -27,5 +27,10 @@ exports.getArticles = (req, res, next) => {
     });
 }
     
-
+exports.getArticles = (req, res, next) => {
+    fetchArticles()
+    .then((data) => 
+    res.status(200).send({articles: data})
+    ).catch(next)
+}
 
