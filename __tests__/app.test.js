@@ -19,7 +19,7 @@ describe("GET /api/topics", () => {
         return request(app)
         .get("/api/topics")
         .expect(200)
-        .then(({body}) => {
+        .then(({ body }) => {
             expect(body.topics).toHaveLength(3)
             expect(body.topics).toBeInstanceOf(Array)
                 body.topics.forEach((item) => {
@@ -102,7 +102,6 @@ describe("Get /api/articles/:article_id", () => {
             expect(body.message).toBe("Not found");
         })
     })
-
 })
 
 describe("Get /api/articles", () => {
@@ -120,7 +119,6 @@ describe("Get /api/articles", () => {
                 for (let i = 0; i < body.articles.length -1; i++){
                     let latest = new Date(body.articles[i].created_at);
                     let next = new Date(body.articles[i + 1].created_at);
-                    console.log(latest, next)
                     expect(next.getTime()).toBeLessThanOrEqual(latest.getTime())
                 }
             expect(body.articles).not.toHaveProperty("body")
@@ -140,3 +138,40 @@ describe("Get /api/articles", () => {
         })
     })
 })
+
+describe("GET /api/articles/:article_id/comments", () => {
+    test("200: Should respond with an array of comments for the given article_id with the relevant properties, ordered by most recent comment first", () => {
+        return request(app)
+        .get("/api/articles/1/comments")
+        .expect(200)
+        .then(({ body }) => {
+            expect(body.comments).toBeInstanceOf(Array)
+            for (let i = 0; i < body.comments.length; i++){
+                expect(body.comments[i].article_id).toBe(1)
+            }
+            body.comments.forEach((item) => {
+                expect(item).toHaveProperty("comment_id")
+                expect(item).toHaveProperty("votes")
+                expect(item).toHaveProperty("created_at")
+                expect(item).toHaveProperty("author")
+                expect(item).toHaveProperty("body")
+            })
+            for (let i = 0; i < body.comments.length -1; i++){
+                let latest = new Date(body.comments[i].created_at);
+                let next = new Date(body.comments[i + 1].created_at);
+                expect(next.getTime()).toBeLessThanOrEqual(latest.getTime())
+            }
+        })
+    })
+    test("200: Should respond with an array of comments, ordered by date created for a different article_id", () => {
+        return request(app)
+        .get("/api/articles/5/comments")
+        .expect(200)
+        .then(({ body }) => {
+            for (let i = 0; i < body.comments.length; i++){
+            expect(body.comments[i].article_id).toBe(5)
+           }
+        })
+    })
+});
+
