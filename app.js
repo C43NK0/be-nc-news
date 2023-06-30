@@ -6,6 +6,7 @@ const {getTopics, getEndpoints, getArticlesbyId, getArticles, getCommentsById, }
 
 
 
+
 app.get("/api/topics", getTopics)
 
 
@@ -19,6 +20,8 @@ app.get("/api/articles", getArticles)
 
 
 app.get("/api/articles/:article_id/comments", getCommentsById)
+
+
 
 
 

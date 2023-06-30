@@ -145,21 +145,26 @@ describe("GET /api/articles/:article_id/comments", () => {
         .get("/api/articles/1/comments")
         .expect(200)
         .then(({ body }) => {
-            expect(body.comments).toBeInstanceOf(Array)
-            for (let i = 0; i < body.comments.length; i++){
+                for (let i = 0; i < body.comments.length; i++){
                 expect(body.comments[i].article_id).toBe(1)
+                expect(body.comments.length).toBeGreaterThan(0)
             }
             body.comments.forEach((item) => {
-                expect(item).toHaveProperty("comment_id")
-                expect(item).toHaveProperty("votes")
-                expect(item).toHaveProperty("created_at")
-                expect(item).toHaveProperty("author")
-                expect(item).toHaveProperty("body")
+                expect(item).toMatchObject({
+                    comment_id: expect.any(Number),
+                    votes: expect.any(Number),
+                    created_at: expect.any(String),
+                    author: expect.any(String),
+                    body: expect.any(String)
+                })
+                expect(body.comments.length).toBeGreaterThan(0)
+                
             })
             for (let i = 0; i < body.comments.length -1; i++){
                 let latest = new Date(body.comments[i].created_at);
                 let next = new Date(body.comments[i + 1].created_at);
                 expect(next.getTime()).toBeLessThanOrEqual(latest.getTime())
+                expect(body.comments.length).toBeGreaterThan(0)
             }
         })
     })
@@ -170,6 +175,7 @@ describe("GET /api/articles/:article_id/comments", () => {
         .then(({ body }) => {
             for (let i = 0; i < body.comments.length; i++){
             expect(body.comments[i].article_id).toBe(5)
+            expect(body.comments.length).toBeGreaterThan(0)
            }
         })
     })
