@@ -19,7 +19,7 @@ describe("GET /api/topics", () => {
         return request(app)
         .get("/api/topics")
         .expect(200)
-        .then(({body}) => {
+        .then(({ body }) => {
             expect(body.topics).toHaveLength(3)
             expect(body.topics).toBeInstanceOf(Array)
                 body.topics.forEach((item) => {
@@ -102,7 +102,6 @@ describe("Get /api/articles/:article_id", () => {
             expect(body.message).toBe("Not found");
         })
     })
-
 })
 
 describe("Get /api/articles", () => {
@@ -120,7 +119,6 @@ describe("Get /api/articles", () => {
                 for (let i = 0; i < body.articles.length -1; i++){
                     let latest = new Date(body.articles[i].created_at);
                     let next = new Date(body.articles[i + 1].created_at);
-                    console.log(latest, next)
                     expect(next.getTime()).toBeLessThanOrEqual(latest.getTime())
                 }
             expect(body.articles).not.toHaveProperty("body")
@@ -137,6 +135,69 @@ describe("Get /api/articles", () => {
             article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700',
             comment_count: '1'
             })
+        })
+    })
+})
+
+describe("GET /api/articles/:article_id/comments", () => {
+    test("200: Should respond with an array of comments for the given article_id with the relevant properties, ordered by most recent comment first", () => {
+        return request(app)
+        .get("/api/articles/1/comments")
+        .expect(200)
+        .then(({ body }) => {
+            expect(body.comments.length).toBeGreaterThan(0)
+                for (let i = 0; i < body.comments.length; i++){
+                expect(body.comments[i].article_id).toBe(1)
+                }
+            body.comments.forEach((item) => {
+                expect(item).toMatchObject({
+                    comment_id: expect.any(Number),
+                    votes: expect.any(Number),
+                    created_at: expect.any(String),
+                    author: expect.any(String),
+                    body: expect.any(String),
+                    article_id: 1
+                })               
+            })
+            for (let i = 0; i < body.comments.length -1; i++){
+                let latest = new Date(body.comments[i].created_at);
+                let next = new Date(body.comments[i + 1].created_at);
+                expect(next.getTime()).toBeLessThanOrEqual(latest.getTime())
+                }
+        })
+    })
+    test("200: Should respond with an array of comments, ordered by date created for a different article_id", () => {
+        return request(app)
+        .get("/api/articles/5/comments")
+        .expect(200)
+        .then(({ body }) => {
+            expect(body.comments.length).toBeGreaterThan(0)
+            for (let i = 0; i < body.comments.length -1; i++){
+                let latest = new Date(body.comments[i].created_at);
+                let next = new Date(body.comments[i + 1].created_at);
+                expect(next.getTime()).toBeLessThanOrEqual(latest.getTime())
+                }
+            for (let i = 0; i < body.comments.length; i++){
+            expect(body.comments[i].article_id).toBe(5)
+           }
+        })        
+    })    
+});
+describe("GET /api/articles/:article_id/comments", () =>{
+    test("404: Should respond with a 404 error if article_id is valid but does not exist", () => {
+        return request(app)
+        .get("/api/articles/9999/comments")
+        .expect(404)
+        .then(({ body }) => {
+            expect(body.message).toBe("Not found")
+        })
+    })
+    test("400: should respond with 'Bad request' when passed an invalid article_id type", () => {
+        return request(app)
+        .get("/api/articles/plzGodLetThisPass/comments")
+        .expect(400)
+        .then(({ body }) => {
+            expect(body.message).toBe("Bad request")
         })
     })
 })
