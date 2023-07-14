@@ -21,10 +21,7 @@ Request body accepts:
 
 Responds with:
 
-    the posted comment. //
-
-
-    
+    the posted comment. //    
 
 
 Task 8: PATCH
@@ -33,6 +30,8 @@ Status 400, invalid ID, e.g. string of "not-an-id"
 Status 404, non existent ID, e.g. 0 or 9999
 Status 400, incorrect body, e.g. inc_votes property is not a number
 (Optional) Status 200, if inc_votes is missing, should not update article and return original single article object (this may be included as a 400 but that could make for a brittle test suite)
+
+
 
 
 Task 9: DELETE

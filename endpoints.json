@@ -81,5 +81,28 @@
   "exampleResponse": {
     "body": "My comment is as follows..."
   }
+},
+"PATCH /api/articles/:article_id": {
+  "description": "serves an article object with an updated vote count",
+  "parameters": [
+    {
+      "name": "article_id",
+      "type": "integer"
+    }
+  ],
+  "queries": [],
+  "exampleRequest": { 
+    "inc_votes": -2 
+},
+  "exampleResponse": {
+    "article_id": 1,
+    "title": "Living in the shadow of a great man",
+    "topic": "mitch",
+    "author": "butter_bridge",
+    "body": "I find this existence challenging",
+    "votes": 98,
+    "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
+  }
 }
+
 }

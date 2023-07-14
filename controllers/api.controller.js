@@ -1,4 +1,4 @@
-const {fetchTopics, fetchArticlesById, fetchArticles, fetchCommentsById, putComments} = require("../models/api.model")
+const {fetchTopics, fetchArticlesById, fetchArticles, fetchCommentsById, putComments, updateArticlesById} = require("../models/api.model")
 const endpoints = require("../endpoints.json")
 
 
@@ -63,4 +63,17 @@ exports.postComments = (req, res, next) => {
     })
     
     
+}
+
+exports.patchArticlesById = (req, res, next) => {
+    const {article_id} = req.params
+    const incVotes = req.body.inc_votes;
+   
+    updateArticlesById(incVotes, article_id)
+    .then((data) => {
+        res.status(200).send({article: data})
+    })
+    .catch((err) => {
+        next(err)
+    })
 }
