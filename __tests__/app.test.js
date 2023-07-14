@@ -369,7 +369,7 @@ describe("PATCH /api/articles/:article_id", () => {
 
         })
     })
-    test.only("400: Should respond with a 400 error for incorrect body object", () => {
+    test("400: Should respond with a 400 error for incorrect body object", () => {
         const voteUpdate = {}
         return request(app)
         .patch("/api/articles/1")
