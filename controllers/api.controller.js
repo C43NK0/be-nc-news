@@ -1,4 +1,4 @@
-const {fetchTopics, fetchArticlesById, fetchArticles, fetchCommentsById} = require("../models/api.model")
+const {fetchTopics, fetchArticlesById, fetchArticles, fetchCommentsById, putComments} = require("../models/api.model")
 const endpoints = require("../endpoints.json")
 
 
@@ -43,5 +43,24 @@ exports.getCommentsById = (req, res, next) => {
     .catch((err) => {
         next(err)
     });
+    
+}
+
+exports.postComments = (req, res, next) => {
+    const username = req.body.username
+    // console.log(req.body.username)
+    
+    const { body } = req.body
+    const { article_id } = req.params
+   
+    putComments(username, body, article_id)
+    .then((data) => {
+        
+        res.status(201).send({comment: data})
+    })
+    .catch((err) => {
+        next(err)
+    })
+    
     
 }

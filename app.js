@@ -1,9 +1,9 @@
 const express = require("express")
-const {handleServerErrors, handlePsqlErrors, handleCustomErrors} = require("./errors/errors")
+const {handleServerErrors, handlePsqlErrors, handleCustomErrors, handle404Errors} = require("./errors/errors")
 const app = express()
-const {getTopics, getEndpoints, getArticlesbyId, getArticles, getCommentsById, } = require("./controllers/api.controller")
+const {getTopics, getEndpoints, getArticlesbyId, getArticles, getCommentsById, postComments, } = require("./controllers/api.controller")
 
-
+app.use(express.json())
 
 
 
@@ -22,6 +22,9 @@ app.get("/api/articles", getArticles)
 app.get("/api/articles/:article_id/comments", getCommentsById)
 
 
+app.post("/api/articles/:article_id/comments", postComments)
+
+
 
 
 
@@ -34,6 +37,8 @@ app.all("*", (req, res) => {
 app.use(handlePsqlErrors)
 
 app.use(handleCustomErrors)
+
+app.use(handle404Errors)
 
 app.use(handleServerErrors)
 

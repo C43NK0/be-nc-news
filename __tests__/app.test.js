@@ -183,6 +183,7 @@ describe("GET /api/articles/:article_id/comments", () => {
         })        
     })    
 });
+
 describe("GET /api/articles/:article_id/comments", () =>{
     test("404: Should respond with a 404 error if article_id is valid but does not exist", () => {
         return request(app)
@@ -198,6 +199,92 @@ describe("GET /api/articles/:article_id/comments", () =>{
         .expect(400)
         .then(({ body }) => {
             expect(body.message).toBe("Bad request")
+        })
+    })
+})
+
+describe("POST /api/articles/:article_id/comments", () => {
+    test("201: Should respond with a 201 status and the posted comment", () => {
+        const newComment = {
+            username: "butter_bridge",
+            body: "My comment is as follows...",
+        }
+
+        return request(app)
+        .post("/api/articles/1/comments")
+        .send(newComment)
+        .expect(201)
+        .then(({ body }) => {
+            expect(body.comment.body).toBe("My comment is as follows...")
+
+        })
+    })
+    test("201: Should respond with a 201 status and the posted comment, ignoring unnecessary properties", () => {
+        const newComment = {
+            username: "butter_bridge",
+            body: "My comment is as follows...",
+            fuck: "Yeee, fuck, y'all",
+        }
+        return request(app)
+        .post("/api/articles/1/comments")
+        .send(newComment)
+        .expect(201)
+        .then(({ body }) => {
+            expect(body.comment.body).toBe("My comment is as follows...")
+
+        })
+    })
+    test("400: Should respond with a 400 error for invalid IDs", () => {
+        const newComment = {
+            username: "butter_bridge",
+            body: "My comment is as follows...",
+        }
+        return request(app)
+        .post("/api/articles/not-an-id/comments")
+        .send(newComment)
+        .expect(400)
+        .then(({ body }) => {
+            expect(body.message).toBe("Bad request")
+
+        })
+    })
+    test("404: Should respond with a 404 error for valid but non-existent IDs", () => {
+        const newComment = {
+            username: "butter_bridge",
+            body: "My comment is as follows..."
+        }
+        return request(app)
+        .post("/api/articles/0/comments")
+        .send(newComment)
+        .expect(404)
+        .then(({ body }) => {
+            expect(body.message).toBe("Not Found")
+        })
+    })
+    test("400: Should respond with a 400 error if required properties (username / body) are missing", () => {
+        const newComment = {
+            
+            body: "My comment is as follows..."
+        }
+        return request(app)
+        .post("/api/articles/1/comments")
+        .send(newComment)
+        .expect(400)
+        .then(({ body }) => {
+            expect(body.message).toBe("Bad request")
+        })
+    })
+    test("404: Should respond with a 404 status if username does not exist", () => {
+        const newComment = {
+            username: "C43NK0",
+            body: "My comment is as follows..."
+        }
+        return request(app)
+        .post("/api/articles/1/comments")
+        .send(newComment)
+        .expect(404)
+        .then(({ body }) => {
+            expect(body.message).toBe("Not Found")
         })
     })
 })

@@ -43,3 +43,17 @@ exports.fetchCommentsById = (id) => {
         return rows
         }) 
 }
+
+exports.putComments = (username, comment, id) => {
+
+    return db.query(`
+    INSERT INTO comments (author, body, article_id)
+    VALUES ($1, $2, $3)
+    RETURNING *;`, [username, comment, id])
+    .then(({ rows }) => {
+        if (rows.length === 0) {
+            return Promise.reject({ status: 404, message: "Not found"})
+        }        
+        return rows[0]
+        }) 
+}
