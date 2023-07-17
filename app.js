@@ -2,6 +2,10 @@ const express = require("express")
 const {handleServerErrors, handlePsqlErrors, handleCustomErrors, handle404Errors} = require("./errors/errors")
 const app = express()
 const {getTopics, getEndpoints, getArticlesbyId, getArticles, getCommentsById, postComments, patchArticlesById, } = require("./controllers/api.controller")
+const cors = require('cors')
+
+
+app.use(cors());
 
 app.use(express.json())
 
